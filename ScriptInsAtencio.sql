@@ -1,3 +1,5 @@
+USE fabrica;
+
 INSERT INTO sector(nombre)
 VALUES('Ventas'),('Contabilidad'),('Mantenimiento'),('Produccion'),('Recursos humanos');
 

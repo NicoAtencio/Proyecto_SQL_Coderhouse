@@ -71,7 +71,7 @@ CREATE TABLE `clientes` (
   `id_cliente` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL,
   `telefono` varchar(50) NOT NULL UNIQUE,
-  `id_provincia` int DEFAULT NULL,
+  `id_provincia` int NOT NULL,
   PRIMARY KEY (`id_cliente`),
   FOREIGN KEY (`id_provincia`) REFERENCES `provincias` (`id_provincia`)
 );
