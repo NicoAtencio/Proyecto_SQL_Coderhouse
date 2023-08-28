@@ -62,6 +62,7 @@ CREATE OR REPLACE VIEW beneficio_neto_venta_producto AS
 		SELECT re.id_producto,re.nombre,re.recaudado - ga.gastos as ingreso_neto
         FROM recaudado_por_producto re
         INNER JOIN gastos_por_producto ga ON (re.id_producto = ga.id_producto)
+        -- gastos_por_producto no es una tabla, es una vista creada con anterioridad
     );
 -- El propósito de la vista el obtener el "ingreso neto" por las ventas de los productos,
 -- sin contar con el sueldo, mantenimiento, gastos de envio, impuestos y demas gastos.    

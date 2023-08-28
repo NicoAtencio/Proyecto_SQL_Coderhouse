@@ -8,6 +8,7 @@ BEGIN
 	SELECT re.recaudado INTO recaudado_vendedor 
     FROM empleados e
     INNER JOIN recaudado_vendedores re ON re.nombre = e.nombre AND re.apellido = e.apellido
+    -- recaudado_vendedores no es una tabla, es una vista.
     WHERE id_empleado = id;
     RETURN recaudado_vendedor;
 END $$
