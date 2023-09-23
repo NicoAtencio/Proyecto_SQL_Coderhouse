@@ -24,6 +24,7 @@ CREATE TABLE `productos` (
   `id_producto` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL UNIQUE,
   `precio` int NOT NULL,
+  `unidades_disponibles` int default 10000,
   PRIMARY KEY (`id_producto`)
 );
 
@@ -84,6 +85,7 @@ CREATE TABLE `pedidos` (
   `id_cliente` int NOT NULL,
   `id_empleado` int NOT NULL,
   `id_empresa_envio` int NOT NULL,
+  `fecha` date,
   PRIMARY KEY (`id_pedido`),
   FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
   FOREIGN KEY (`id_empleado`) REFERENCES `empleados` (`id_empleado`),
@@ -100,40 +102,69 @@ CREATE TABLE `detalles_pedido` (
 
 CREATE TABLE `_registro_pedido`(
 	id_log INT PRIMARY KEY auto_increment,
-    operacion VARCHAR(100),
+    id_pedido INT,
 	usuario VARCHAR(100) NOT NULL,
     fecha DATE NOT NULL,
-    hora TIME NOT NULL
+    hora TIME NOT NULL,
+    FOREIGN KEY (`id_pedido`) REFERENCES `pedidos`(`id_pedido`)
 );
--- La creacion de esta tabla es para almacenar que usuario, cuando  y a que hora registro un nuevo pedido.
+-- La creacion de esta tabla es para almacenar que usuario, cuando  y a que hora registró un nuevo pedido.
 
 -- INSERCION DE DATOS
 
 INSERT INTO sector(nombre)
-VALUES('Ventas'),('Contabilidad'),('Mantenimiento'),('Produccion'),('Recursos humanos');
+VALUES('Ventas'),
+	('Contabilidad'),
+	('Mantenimiento'),
+	('Produccion'),
+	('Recursos humanos');
 
 INSERT INTO empleados(nombre,apellido,telefono,id_sector)
-VALUES('Fields','Sapson', '899-871-5137', 1),('Franni','Stopforth', '912-581-0646',5),
-('Lucas','Aindriu','366-841-3712',1),('Gregorio','Keyzman','135-721-2557',4),('Fran','Godar','823-146-4294',4);
+VALUES	('Fields','Sapson', '899-871-5137', 1),
+		('Franni','Stopforth', '912-581-0646',5),
+		('Lucas','Aindriu','366-841-3712',1),
+		('Gregorio','Keyzman','135-721-2557',4),
+		('Fran','Godar','823-146-4294',4),
+        ('Mariana','Jhonson', '897-321-1111', 1);
 
 INSERT INTO productos(nombre,precio)
-VALUES('Fideos', 300),('Fideos de morron', 350),('ñoquis', 320),('ravioles espinaca', 450),('ravioles jamon y queso', 500);
+VALUES	('Fideos', 300),
+		('Fideos de morron', 350),
+        ('ñoquis', 320),
+        ('ravioles espinaca', 450),
+        ('ravioles jamon y queso', 500);
 
 INSERT INTO proveedores(Nombre)
 VALUES('NASDAQ'),('NYSE'),('SATSDEL');
 
 INSERT INTO materias_prima(nombre,id_proveedor,precio)
-VALUES('Huevo por Kg',1,200),('Harina por Kg',2, 15),('Jamon por Kg',2,70),('Queso por Kg',2, 40),('Morron por kg',3, 30),('Papa',3,5),('Espinaca',3,10);
+VALUES	('Huevo por Kg',1,200),
+		('Harina por Kg',2, 15),
+        ('Jamon por Kg',2,70),
+        ('Queso por Kg',2, 40),
+        ('Morron por kg',3, 30),
+        ('Papa',3,5),
+        ('Espinaca',3,10);
 
 INSERT INTO recetas
-VALUES(1,1,530),(1,2,1500),(2,1,350),(2,2,1500),(2,5,500),(3,2,1000),(3,6,500),(4,1,100),(4,2,1000),
-(4,7,250),(5,1,100),(5,2,1000),(5,3,500),(5,4,500);
+VALUES	(1,1,530),(1,2,1500),
+        (2,1,350),(2,2,1500),(2,5,500),
+        (3,2,1000),(3,6,500),
+        (4,1,100),(4,2,1000),(4,7,250),
+        (5,1,100),(5,2,1000),(5,3,500),(5,4,500);
 
 INSERT INTO realizacion_empleados
-VALUES(1,4),(2,4),(3,5),(4,4),(4,5),(5,4),(5,5);
+VALUES	(1,4),
+		(2,4),
+        (3,5),
+        (4,4),(4,5),
+        (5,4),(5,5);
 
 INSERT INTO empresas_envio(nombre,telefono)
-VALUES('SWIN', '795-772-2055'),('LAYN','675-488-8623'),('SHOS','530-424-1223'),('FOLD','283-591-8652');
+VALUES	('SWIN', '795-772-2055'),
+		('LAYN','675-488-8623'),
+        ('SHOS','530-424-1223'),
+        ('FOLD','283-591-8652');
 
 INSERT INTO provincias(nombre)
 VALUES('Mendoza'),('Buenos Aires'),('San Juan'),('San Luis'),('Cordoba'),('Santa Fe'),('Entre Rios'),
@@ -143,15 +174,35 @@ VALUES('Mendoza'),('Buenos Aires'),('San Juan'),('San Luis'),('Cordoba'),('Santa
 
 
 INSERT INTO clientes(nombre,telefono,id_provincia)
-VALUES ('Michael Kors Holdings Limited','425-216-7005',1 ),('BB&T Corporation','305-882-0707',3),
-('BB&T Corporation','219-163-2397',2),('Interactive Brokers Group, Inc.','183-688-0844',4),
-('TerraForm Global, Inc.','601-773-6592',1);
+VALUES	('Michael Kors Holdings Limited','425-216-7005',1 ),
+		('BB&T Corporation','305-882-0707',3),
+		('BB&T Corporation','219-163-2397',2),
+        ('Interactive Brokers Group, Inc.','183-688-0844',4),
+		('TerraForm Global, Inc.','601-773-6592',1);
 
-INSERT INTO pedidos(id_cliente,id_empleado,id_empresa_envio)
-VALUES (1,3,1),(2,3,1),(1,1,1),(3,3,2),(5,3,1);
+INSERT INTO pedidos(id_cliente,id_empleado,id_empresa_envio,fecha)
+VALUES	(1,3,1,"2023-08-16"),
+		(2,3,1,"2023-08-18"),
+        (1,1,1,"2023-08-27"),
+        (3,3,2,"2023-09-03"),
+        (5,3,1,"2023-09-12"),
+        (3,6,4,"2023-08-10"),
+        (2,6,1,"2023-08-17"),
+        (4,6,2,"2023-09-01"),
+        (1,1,3,"2023-08-06"),
+        (1,3,4,"2023-09-07");
 
 INSERT INTO detalles_pedido
-VALUES(1,1,50), (2,1,100),(5,1,70),(1,2,90),(4,2,40),(2,3,28),(4,4,80),(5,4,100),(1,5,120),(2,5,40);
+VALUES	(1,1,50),(2,1,100),(5,1,70),
+        (1,2,90),(4,2,40),
+        (2,3,28),
+        (4,4,80),(5,4,100),
+        (1,5,120),(2,5,40),
+        (2,6,200),(1,6,160),(5,6,400),
+        (1,7,190),(3,7,280),
+        (3,8,400),
+        (4,9,200),(5,9,120),
+        (1,10,230),(2,10,150),(3,10,290),(4,10,300);
 
 -- CREACION DE VISTAS
 
@@ -163,7 +214,7 @@ CREATE OR REPLACE VIEW recaudado_vendedores AS
     INNER JOIN productos pr ON (pr.id_producto = de.id_producto)
     GROUP BY em.id_empleado
     );
--- El proposito de la vista es saber cuanto dinero recauda cada vendedor.
+-- El proposito de la vista es saber cuanto dinero a recaudo cada vendedor.
 
 CREATE OR REPLACE VIEW provincia_ventas AS 
 	(SELECT p.nombre, COUNT(DISTINCT pe.id_pedido) as ventas_provincia
@@ -243,6 +294,7 @@ BEGIN
     WHERE id_empleado = id;
     RETURN nombre_sector;
 END$$
+select sector_del_empleado(2) as sector;
 -- La función recive como parametro el id de un empleado y devuelve el nombre del sector en el que 
 -- desarrolla su actividad.
 
@@ -282,7 +334,7 @@ BEGIN
     FROM pedidos;
     
     WHILE i <= LENGTH(REPLACE(productos_ids,',','')) DO
-    -- Esto da como resultado la cantidad de id_productos pasados como parametro sin contar la co.
+    -- Esto da como resultado la cantidad de id_productos pasados como parametro sin contar la coma.
     SET producto_id = CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(productos_ids,',',i),',',-1) AS SIGNED);
     SET cantidad_producto = CAST(SUBSTRING_INDEX((SUBSTRING_INDEX(cantidades,',',i)),',',-1) AS SIGNED);
     -- En ambos casos obtengo el numero de la posicion i del texto donde los numeros estan
@@ -312,8 +364,8 @@ CREATE TRIGGER trigger_registrar_pedido
 AFTER INSERT ON pedidos
 FOR EACH ROW
 BEGIN
-	INSERT INTO _registro_pedido(operacion,usuario,fecha,hora)
-    VALUES ('Insercion pedido',USER(),CURDATE(),CURTIME());
+	INSERT INTO _registro_pedido(id_pedido,usuario,fecha,hora)
+    VALUES (NEW.id_pedido,USER(),CURDATE(),CURTIME());
 END $$
 -- Lo que hace el trigger es cuando un usuario registra un nuevo pedido automaticamente en la tabla registro_pedido
 -- se insertan el tipo de operación, el uusario, la fecha y la hora en la que registra el pedido.
@@ -330,6 +382,36 @@ BEGIN
 END $$
 -- Lo que hace este trigger es en caso de que al agregar una nueva fila en detalles_pedidos si no le ingresan
 -- una cantidad de producto o ingresa un valor negativo se le asigne 50 a la cantidad.
+
+DELIMITER $$
+CREATE TRIGGER descontar_stock
+AFTER INSERT ON detalles_pedido
+FOR EACH ROW
+BEGIN
+	DECLARE cantidad_pedido INT;
+  DECLARE id_producto_pedido INT;
+  
+  SET cantidad_pedido = NEW.cantidad;
+  SET id_producto_pedido = NEW.id_producto;
+  
+  UPDATE productos
+  SET unidades_disponibles = unidades_disponibles - cantidad_pedido
+  WHERE id_producto = id_producto_pedido;
+END $$
+-- El proposito del trigger es que al detallar la cantidad de un producto en una venta se descuento del stock, el cual se
+-- encuentra registrado en la tabla productos.
+
+DELIMITER $$
+CREATE TRIGGER insertar_fecha
+BEFORE INSERT ON pedidos
+FOR EACH ROW 
+BEGIN
+	IF NEW.fecha IS NULL THEN
+		SET NEW.fecha = CURDATE();
+	END IF;
+END $$
+-- El objetivo de trigger es que en caso de que no se le agregue fecha al pedido se le agregue la fecha del momento de la insercion
+-- de los datos.
 
 
 -- PRUEBAS VISTAS
